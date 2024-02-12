@@ -1,7 +1,8 @@
+version: '3'
 services:
   app:
-  image: montiwa/app
-  container_name: 67-ced-strapi
+    image: wawacoong/app:1.0.0
+    container_name: 67-ced-strapi
     environment:
       - DATABASE_CLIENT=postgres
       - DATABASE_HOST=192.168.211.28
@@ -10,3 +11,6 @@ services:
       - DATABASE_USERNAME=montiwa01
       - DATABASE_PASSWORD=montiwa01
       - DATABASE_SSL=false
+      - JWT_SECRET=5V+xZt3WFDXFpDElG+rqeA==
+    ports:
+      - 1337:1337
