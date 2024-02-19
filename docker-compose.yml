@@ -3,14 +3,28 @@ services:
   app:
     image: wawacoong/app:1.0.0
     container_name: 67-ced-strapi
-    environment:
-      - DATABASE_CLIENT=postgres
-      - DATABASE_HOST=192.168.211.28
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=67_app_uat
-      - DATABASE_USERNAME=montiwa01
-      - DATABASE_PASSWORD=montiwa01
-      - DATABASE_SSL=false
-      - JWT_SECRET=5V+xZt3WFDXFpDElG+rqeA==
+    restart: unless-stopped
     ports:
-      - 1337:1337
+      - '8080:1337'
+    environment:
+      - DATABASE_CLIENT=${DATABASE_CLIENT}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    env_file:
+      - .env
+
+  db:
+    image: postgres:15.5-bullseye
+    container_name: 67-ced10-db
+    restart: unless-stopped
+    ports:
+      - '43245:5432'
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - .env
