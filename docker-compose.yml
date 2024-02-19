@@ -1,30 +1,59 @@
-version: '3'
-services:
-  app:
-    image: wawacoong/app:1.0.0
-    container_name: 67-ced-strapi
-    restart: unless-stopped
-    ports:
-      - '8080:1337'
-    environment:
-      - DATABASE_CLIENT=${DATABASE_CLIENT}
-      - DATABASE_HOST=${DATABASE_HOST}
-      - DATABASE_PORT=${DATABASE_PORT}
-      - DATABASE_NAME=${DATABASE_NAME}
-      - DATABASE_USERNAME=${DATABASE_USERNAME}
-      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-    env_file:
-      - .env
+# version: '3'
+# services:
+#   app:
+#     image: wawacoong/app:1.0.0
+#     container_name: 67-ced-strapi
+#     restart: unless-stopped
+#     ports:
+#       - '1337:1337'
+#     environment:
+#       - DATABASE_CLIENT=${DATABASE_CLIENT}
+#       - DATABASE_HOST=${DATABASE_HOST}
+#       - DATABASE_PORT=${DATABASE_PORT}
+#       - DATABASE_NAME=${DATABASE_NAME}
+#       - DATABASE_USERNAME=${DATABASE_USERNAME}
+#       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    
+#     env_file:
+#       - .env
 
+#   db:
+#     image: postgres:15.5-bullseye
+#     container_name: 67-ced10-db
+#     restart: unless-stopped
+#     environment:
+#       - POSTGRES_DB=${POSTGRES_DB}
+#       - POSTGRES_USER=${POSTGRES_USER}
+#       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#     env_file:
+#       - .env
+
+
+
+version: '3'
+services: # Include of
+  strapi_server:
+    image: wawacoong/strapi:1.0.0
+    container_name: 67-ced-strapi_server
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    depends_on:
+      - db
+    ports:
+      - 1337:1337 
   db:
     image: postgres:15.5-bullseye
-    container_name: 67-ced10-db
+    container_name: 67-ced-db
     restart: unless-stopped
-    ports:
-      - '43245:5432'
+    env_file: .env
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    env_file:
-      - .env
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
