@@ -1,59 +1,33 @@
-# version: '3'
-# services:
-#   app:
-#     image: wawacoong/app:1.0.0
-#     container_name: 67-ced-strapi
-#     restart: unless-stopped
-#     ports:
-#       - '1337:1337'
-#     environment:
-#       - DATABASE_CLIENT=${DATABASE_CLIENT}
-#       - DATABASE_HOST=${DATABASE_HOST}
-#       - DATABASE_PORT=${DATABASE_PORT}
-#       - DATABASE_NAME=${DATABASE_NAME}
-#       - DATABASE_USERNAME=${DATABASE_USERNAME}
-#       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-    
-#     env_file:
-#       - .env
-
-#   db:
-#     image: postgres:15.5-bullseye
-#     container_name: 67-ced10-db
-#     restart: unless-stopped
-#     environment:
-#       - POSTGRES_DB=${POSTGRES_DB}
-#       - POSTGRES_USER=${POSTGRES_USER}
-#       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-#     env_file:
-#       - .env
-
-
-
 version: '3'
-services: # Include of
-  strapi_server:
+
+services:
+  app:
     image: wawacoong/strapi:1.0.0
-    container_name: 67-ced-strapi_server
-    restart: unless-stopped
-    env_file: .env
+    container_name: ced-app
     environment:
-      DATABASE_CLIENT: ${DATABASE_CLIENT}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_HOST: db
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      - DATABASE_CLIENT=${DATABASE_CLIENT}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_SSL=${DATABASE_SSL}
+      - APP_KEYS=${APP_KEYS}
+      - JWT_SECRET=${JWT_SECRET}
+      - API_TOKEN_SALT=${API_TOKEN_SALT}
+      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET}
+    ports:
+      - 8080:1337
     depends_on:
       - db
-    ports:
-      - 1337:1337 
+    restart: always
   db:
     image: postgres:15.5-bullseye
-    container_name: 67-ced-db
-    restart: unless-stopped
-    env_file: .env
+    container_name: ced-db
     environment:
-      POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_DB: ${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - ${DATABASE_PORT}:5432
+    restart: always
